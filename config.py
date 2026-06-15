@@ -11,7 +11,7 @@ EXCHANGE_DOMAIN: str = os.environ.get("EXCHANGE_DOMAIN", "yektanet")
 # Requesty (OpenAI-compatible AI proxy)
 REQUESTY_API_KEY: str = os.environ["REQUESTY_API_KEY"]
 REQUESTY_BASE_URL: str = os.environ.get("REQUESTY_BASE_URL", "https://router.requesty.ai/v1")
-REQUESTY_MODEL: str = os.environ.get("REQUESTY_MODEL", "anthropic/claude-sonnet-4-6")
+REQUESTY_MODEL: str = os.environ.get("REQUESTY_MODEL", "google/gemini-2.0-flash")
 
 ENCRYPTION_KEY: bytes = os.environ["ENCRYPTION_KEY"].encode()
 
