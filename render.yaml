@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: yektayar
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    plan: free
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: EXCHANGE_SERVER
+        value: mail.yektanet.ir
+      - key: EXCHANGE_DOMAIN
+        value: yektanet
+      - key: REQUESTY_API_KEY
+        sync: false
+      - key: REQUESTY_BASE_URL
+        value: https://router.requesty.ai/v1
+      - key: REQUESTY_MODEL
+        value: google/gemini-2.0-flash
+      - key: ENCRYPTION_KEY
+        sync: false
+      - key: DB_PATH
+        value: /tmp/yektayar.db
+      - key: WEBHOOK_URL
+        fromService:
+          type: web
+          name: yektayar
+          property: host
+          prepend: "https://"

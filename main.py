@@ -107,9 +107,15 @@ async def email_deeplink(update: Update, ctx) -> None:
 async def post_init(app: Application) -> None:
     await init_db()
     logger.info("Database initialized.")
+    if config.WEBHOOK_URL:
+        await app.bot.set_webhook(
+            url=f"{config.WEBHOOK_URL}/telegram",
+            allowed_updates=Update.ALL_TYPES,
+        )
+        logger.info("Webhook set to %s/telegram", config.WEBHOOK_URL)
 
 
-def main() -> None:
+def build_app() -> Application:
     app = (
         Application.builder()
         .token(config.TELEGRAM_BOT_TOKEN)
@@ -117,33 +123,40 @@ def main() -> None:
         .build()
     )
 
-    # Conversation handlers (order matters)
     app.add_handler(build_auth_conversation())
     app.add_handler(build_compose_conversation())
     app.add_handler(build_create_event_conversation())
     app.add_handler(build_contacts_conversation())
     app.add_handler(build_ai_booking_conversation())
 
-    # Simple commands
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("logout", logout))
-
-    # Email deep links (/email_XXXX)
     app.add_handler(MessageHandler(filters.Regex(r"^/email_"), email_deeplink))
-
-    # Menu button router
     app.add_handler(MessageHandler(
         filters.TEXT & ~filters.COMMAND & filters.Regex(
             "^(📧 ایمیل|📅 تقویم|🏢 رزرو اتاق|👥 مخاطبان|🔓 خروج از حساب)$"
         ),
         main_menu_router,
     ))
-
-    # Inline button fallback router
     app.add_handler(CallbackQueryHandler(callback_router))
 
-    logger.info("Yektayar bot started.")
-    app.run_polling(allowed_updates=Update.ALL_TYPES)
+    return app
+
+
+def main() -> None:
+    app = build_app()
+
+    if config.WEBHOOK_URL:
+        logger.info("Starting in webhook mode on port %d", config.PORT)
+        app.run_webhook(
+            listen="0.0.0.0",
+            port=config.PORT,
+            webhook_url=f"{config.WEBHOOK_URL}/telegram",
+            url_path="/telegram",
+        )
+    else:
+        logger.info("Starting in polling mode")
+        app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
 if __name__ == "__main__":

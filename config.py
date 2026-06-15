@@ -24,6 +24,10 @@ ADMIN_IDS: list[int] = [
 # Exchange EWS endpoint (auto-discovered or explicit)
 EXCHANGE_EWS_URL: str | None = os.environ.get("EXCHANGE_EWS_URL")
 
+# Render / webhook settings
+WEBHOOK_URL: str | None = os.environ.get("WEBHOOK_URL")
+PORT: int = int(os.environ.get("PORT", "8443"))
+
 # Pagination limits
 EMAIL_PAGE_SIZE = 10
 CALENDAR_DAYS_AHEAD = 7
