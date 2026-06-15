@@ -1,0 +1,8 @@
+python-telegram-bot==21.6
+exchangelib==5.4.2
+openai==1.57.0
+cryptography==43.0.3
+python-dotenv==1.0.1
+aiosqlite==0.20.0
+pytz==2024.2
+lxml==5.3.0

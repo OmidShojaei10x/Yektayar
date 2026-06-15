@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  yektayar:
+    build: .
+    restart: unless-stopped
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - EXCHANGE_SERVER=${EXCHANGE_SERVER}
+      - EXCHANGE_DOMAIN=${EXCHANGE_DOMAIN}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - DB_PATH=/data/yektayar.db
+      - EXCHANGE_EWS_URL=${EXCHANGE_EWS_URL:-}
+    volumes:
+      - yektayar_data:/data
+    networks:
+      - yektanet_internal
+
+volumes:
+  yektayar_data:
+
+networks:
+  yektanet_internal:
+    external: true
+    name: yektanet_internal
